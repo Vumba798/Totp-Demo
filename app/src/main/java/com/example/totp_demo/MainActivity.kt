@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.totp_demo.ui.screens.MainScreen
 import com.example.totp_demo.ui.theme.TotpdemoTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    MainScreen()
                 }
             }
         }
@@ -38,6 +39,6 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     TotpdemoTheme {
-        Greeting("Android")
+
     }
 }
