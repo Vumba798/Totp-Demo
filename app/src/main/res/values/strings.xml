@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Totp-demo</string>
+    <string name="content_desc_toggle_password_visibility">show password</string>
+    <string name="pin">pin code</string>
+    <string name="ok">Okay</string>
 </resources>

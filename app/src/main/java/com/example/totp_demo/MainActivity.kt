@@ -1,44 +1,40 @@
 package com.example.totp_demo
 
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.totp_demo.ui.screens.MainScreen
-import com.example.totp_demo.ui.theme.TotpdemoTheme
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.MutableLiveData
+import androidx.navigation.compose.rememberNavController
+import com.google.zxing.integration.android.IntentIntegrator
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            TotpdemoTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    MainScreen()
-                }
-            }
+
+class MainActivity: ComponentActivity() {
+    private val text = MutableLiveData("")
+    private val zxingActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        val intentResult = IntentIntegrator.parseActivityResult(it.resultCode, it.data)
+        if(intentResult.contents != null) {
+            Toast.makeText(this, intentResult.contents, Toast.LENGTH_LONG).show()
         }
     }
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    TotpdemoTheme {
-
+    lateinit var prefs: SharedPreferences
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        prefs = getPreferences(android.content.Context.MODE_PRIVATE)
+        setContent {
+            TotpApp(prefs)
+        }
     }
+
+}
+
+@Composable
+fun TotpApp(prefs: SharedPreferences) {
+    var isUnlocked by remember { mutableStateOf(false) }
+    val navController = rememberNavController()
+    MyNavHost(navController, prefs, isUnlocked)
 }
